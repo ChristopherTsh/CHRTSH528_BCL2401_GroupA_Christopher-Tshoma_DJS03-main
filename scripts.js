@@ -81,9 +81,13 @@ document.querySelector('[data-list-button]').enabled = (matches.length - (page *
 
 
 remaining()
-
+const dataSearchOverLay = function (){
+   return document.querySelector('[data-search-overlay]')   
+}
+const overlayElement = dataSearchOverLay();
+console.log(overlayElement)
 document.querySelector('[data-search-cancel]').addEventListener('click', () => {
-    document.querySelector('[data-search-overlay]').open = false
+    overlayElement.open = false
 })
 
 document.querySelector('[data-settings-cancel]').addEventListener('click', () => {
@@ -91,7 +95,7 @@ document.querySelector('[data-settings-cancel]').addEventListener('click', () =>
 })
 
 document.querySelector('[data-header-search]').addEventListener('click', () => {
-    document.querySelector('[data-search-overlay]').open = true 
+    overlayElement.open = true 
     document.querySelector('[data-search-title]').focus()
 })
 
@@ -117,7 +121,7 @@ function remaining(){
     <span>Show more</span>
     <span class="list__remaining"> (${(matches.length - (page * BOOKS_PER_PAGE)) > 0 ? (matches.length - (page * BOOKS_PER_PAGE)) : 0})</span>
 `
-}
+};
 
 document.querySelector('[data-search-form]').addEventListener('submit', (event) => {
     event.preventDefault()
@@ -180,7 +184,7 @@ document.querySelector('[data-search-form]').addEventListener('submit', (event) 
     remaining()
 
     window.scrollTo({top: 0, behavior: 'smooth'});
-    document.querySelector('[data-search-overlay]').open = false
+    overlayElement.open = false
 })
 
 document.querySelector('[data-list-button]').addEventListener('click', () => {
