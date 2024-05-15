@@ -79,10 +79,8 @@ if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').match
 document.querySelector('[data-list-button]').innerText = `Show more (${books.length - BOOKS_PER_PAGE})`
 document.querySelector('[data-list-button]').enabled = (matches.length - (page * BOOKS_PER_PAGE)) > 0
 
-document.querySelector('[data-list-button]').innerHTML = `
-    <span>Show more</span>
-    <span class="list__remaining"> (${(matches.length - (page * BOOKS_PER_PAGE)) > 0 ? (matches.length - (page * BOOKS_PER_PAGE)) : 0})</span>
-`
+
+remaining()
 
 document.querySelector('[data-search-cancel]').addEventListener('click', () => {
     document.querySelector('[data-search-overlay]').open = false
@@ -114,6 +112,12 @@ document.querySelector('[data-settings-form]').addEventListener('submit', (event
     
     document.querySelector('[data-settings-overlay]').open = false
 })
+function remaining(){
+    document.querySelector('[data-list-button]').innerHTML = `
+    <span>Show more</span>
+    <span class="list__remaining"> (${(matches.length - (page * BOOKS_PER_PAGE)) > 0 ? (matches.length - (page * BOOKS_PER_PAGE)) : 0})</span>
+`
+}
 
 document.querySelector('[data-search-form]').addEventListener('submit', (event) => {
     event.preventDefault()
@@ -173,10 +177,7 @@ document.querySelector('[data-search-form]').addEventListener('submit', (event) 
     document.querySelector('[data-list-items]').appendChild(newItems)
     document.querySelector('[data-list-button]').disabled = (matches.length - (page * BOOKS_PER_PAGE)) < 1
 
-    document.querySelector('[data-list-button]').innerHTML = `
-        <span>Show more</span>
-        <span class="list__remaining"> (${(matches.length - (page * BOOKS_PER_PAGE)) > 0 ? (matches.length - (page * BOOKS_PER_PAGE)) : 0})</span>
-    `
+    remaining()
 
     window.scrollTo({top: 0, behavior: 'smooth'});
     document.querySelector('[data-search-overlay]').open = false
@@ -207,6 +208,7 @@ document.querySelector('[data-list-button]').addEventListener('click', () => {
 
     document.querySelector('[data-list-items]').appendChild(fragment)
     page += 1
+    remaining()
 })
 
 document.querySelector('[data-list-items]').addEventListener('click', (event) => {
