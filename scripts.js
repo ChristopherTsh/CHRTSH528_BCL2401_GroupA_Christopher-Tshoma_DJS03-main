@@ -1,7 +1,7 @@
 import { books, authors, genres, BOOKS_PER_PAGE } from "./data.js";
-import{themeColor,remaining} from "./bookUtils.js";
+import { themeColor, remaining } from "./bookUtils.js";
 
-let page = 1; 
+let page = 1;
 let matches = books;
 
 function createBook(bookPreviews) {
@@ -74,8 +74,7 @@ function initializeTheme() {
   }
 }
 
-
-remaining(books,page,BOOKS_PER_PAGE);
+remaining(books, page, BOOKS_PER_PAGE);
 const dataSearchOverLay = function () {
   return document.querySelector("[data-search-overlay]");
 };
@@ -185,7 +184,7 @@ addEventListener("[data-search-form]", "submit", (event) => {
   document.querySelector("[data-list-button]").disabled =
     matches.length - page * BOOKS_PER_PAGE < 1;
 
-  remaining(books,page,BOOKS_PER_PAGE);
+  remaining(books, page, BOOKS_PER_PAGE);
 
   window.scrollTo({ top: 0, behavior: "smooth" });
   overlayElement.open = false;
@@ -219,7 +218,7 @@ addEventListener("[data-list-button]", "click", () => {
 
   document.querySelector("[data-list-items]").appendChild(fragment);
   page += 1;
-  remaining(books,page,BOOKS_PER_PAGE);
+  remaining(books, page, BOOKS_PER_PAGE);
 });
 
 addEventListener("[data-list-items]", "click", (event) => {
@@ -253,22 +252,31 @@ addEventListener("[data-list-items]", "click", (event) => {
       active.description;
   }
 });
-function themeSwitch(){
-
-    const toggle = localStorage.getItem("toggle") === "enabled";
-    document.body.classList.toggle("toggle", toggle);
-
+function themeSwitch() {
+  const toggle = localStorage.getItem("toggle") === "enabled";
+  document.body.classList.toggle("toggle", toggle);
 }
 
 // Function to save theme preference to local storage
 function saveThemePreference(theme) {
-    localStorage.setItem("theme", theme);
-  }
-  
-  // Function to save toggle state to local storage
-  function saveToggleState(toggleState) {
-    localStorage.setItem("toggle", toggleState);
-  }
+  localStorage.setItem("theme", theme);
+}
+
+// Function to save toggle state to local storage
+function saveToggleState(toggleState) {
+  localStorage.setItem("toggle", toggleState);
+}
+
+addEventListener("[data-settings-form]", "submit", (event) => {
+  event.preventDefault();
+  const formData = new FormData(event.target);
+  const { theme } = Object.fromEntries(formData);
+
+  themeColor(theme);
+  saveThemePreference(theme); // Save theme preference to local storage
+
+  document.querySelector("[data-settings-overlay]").open = false;
+});
 
 function initializeApp() {
   const starting = document.createDocumentFragment();
@@ -278,22 +286,32 @@ function initializeApp() {
 
   document.querySelector("[data-list-items]").appendChild(starting);
 
-  document.querySelector("[data-settings-theme]").addEventListener("change", (event) => {
-    const theme = event.target.value;
-    themeColor(theme);
-    saveThemePreference(theme);
-  });
-  
-  // Add event listener for theme toggle button and save its state to local storage
-  document.querySelector("[data-settings-toggle]").addEventListener("click", () => {
-    const toggleState = document.body.classList.toggle("toggle");
-    saveToggleState(toggleState ? "enabled" : "disabled");
-  });
   genreOption();
   authorOption();
   initializeTheme();
   initializeEventListener();
-  themeSwitch()
+  themeSwitch();
 }
 
 initializeApp();
+
+const savedTheme = localStorage.getItem("theme");
+if (savedTheme) {
+  themeColor(savedTheme);
+}
+
+document
+  .querySelector("[data-settings-theme]")
+  .addEventListener("change", (event) => {
+    console.log(theme);
+    const theme = event.target.value;
+    themeColor(theme);
+    saveThemePreference(theme);
+  });
+// Add event listener for theme toggle button and save its state to local storage
+document
+  .querySelector("[data-settings-toggle]")
+  .addEventListener("click", () => {
+    const toggleState = document.body.classList.toggle("toggle");
+    saveToggleState(toggleState ? "enabled" : "disabled");
+  });
