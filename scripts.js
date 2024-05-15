@@ -72,7 +72,7 @@ function themeColor(type = ''){
     }
 }
 // document.querySelector('[data-search-authors]').appendChild(authorsHtml)
-
+function initializeTheme(){
 if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
     document.querySelector('[data-settings-theme]').value = 'night'
     themeColor("night")
@@ -80,7 +80,7 @@ if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').match
     document.querySelector('[data-settings-theme]').value = 'day'
     themeColor("day")
 }
-
+}
 document.querySelector('[data-list-button]').innerText = `Show more (${books.length - BOOKS_PER_PAGE})`
 document.querySelector('[data-list-button]').enabled = (matches.length - (page * BOOKS_PER_PAGE)) > 0
 
@@ -262,6 +262,7 @@ function initializeApp(){
     document.querySelector('[data-list-items]').appendChild(starting);
     genreOption()
     authorOption()
+    initializeTheme()
 }
 
 initializeApp()
