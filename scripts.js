@@ -85,29 +85,31 @@ const dataSearchOverLay = function (){
    return document.querySelector('[data-search-overlay]')   
 }
 const overlayElement = dataSearchOverLay();
-console.log(overlayElement)
+function addEventListener(selector, eventType, eventHandler){
+    document.querySelector(selector).addEventListener(eventType, eventHandler)}
 document.querySelector('[data-search-cancel]').addEventListener('click', () => {
     overlayElement.open = false
 })
 
-document.querySelector('[data-settings-cancel]').addEventListener('click', () => {
+addEventListener('[data-settings-cancel]','click', () => {
     document.querySelector('[data-settings-overlay]').open = false
 })
 
-document.querySelector('[data-header-search]').addEventListener('click', () => {
+addEventListener('[data-header-search]','click', () => {
     overlayElement.open = true 
     document.querySelector('[data-search-title]').focus()
 })
 
-document.querySelector('[data-header-settings]').addEventListener('click', () => {
+addEventListener('[data-header-settings]','click', () => {
     document.querySelector('[data-settings-overlay]').open = true 
 })
 
-document.querySelector('[data-list-close]').addEventListener('click', () => {
+addEventListener('[data-list-close]','click', () => {
     document.querySelector('[data-list-active]').open = false
 })
 
-document.querySelector('[data-settings-form]').addEventListener('submit', (event) => {
+
+addEventListener('[data-settings-form]','submit', (event) => {
     event.preventDefault()
     const formData = new FormData(event.target)
     const { theme } = Object.fromEntries(formData)
