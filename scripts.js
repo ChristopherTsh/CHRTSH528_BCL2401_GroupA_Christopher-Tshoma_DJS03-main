@@ -4,6 +4,7 @@ let page = 1;
 let matches = books
 
 function createBook(bookPreviews) {
+    console.log(bookPreviews)
     const { id, image, title, author } = bookPreviews;
 
     const element = document.createElement('button')
@@ -26,7 +27,6 @@ function createBook(bookPreviews) {
     
 }
 
-document.querySelector('[data-list-items]').appendChild(starting)
 
 const genreHtml = document.createDocumentFragment()
 const firstGenreElement = document.createElement('option')
@@ -248,15 +248,13 @@ addEventListener('[data-list-items]','click', (event) => {
 })
 
 function initializeApp(){
-    const bookPreviews = {
-        author: 'Author Name',
-        id: 'book-1',
-        image: 'path/to/image.jpg',
-        title: 'Book Title'
-    };
+    const starting = document.createDocumentFragment()
+    for (const book of matches.slice(0, BOOKS_PER_PAGE)) {
+        starting.appendChild(createBook(book));
+    }
 
-    const bookElement = createBook(bookPreviews);
-    document.querySelector('[data-list-items]').appendChild(bookElement);
+    
+    document.querySelector('[data-list-items]').appendChild(starting);
 }
 
 initializeApp()
