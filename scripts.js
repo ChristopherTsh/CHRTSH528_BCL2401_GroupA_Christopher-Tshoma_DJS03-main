@@ -1,17 +1,17 @@
-import { books, authors, genres, BOOKS_PER_PAGE } from './data.js'
+import { books, authors, genres, BOOKS_PER_PAGE } from "./data.js";
 
 let page = 1;
-let matches = books
+let matches = books;
 
 function createBook(bookPreviews) {
-    console.log(bookPreviews)
-    const { id, image, title, author } = bookPreviews;
+  console.log(bookPreviews);
+  const { id, image, title, author } = bookPreviews;
 
-    const element = document.createElement('button')
-    element.classList = 'preview'
-    element.setAttribute('data-preview', id)
+  const element = document.createElement("button");
+  element.classList = "preview";
+  element.setAttribute("data-preview", id);
 
-    element.innerHTML = `
+  element.innerHTML = `
         <img
             class="preview__image"
             src="${image}"
@@ -23,155 +23,173 @@ function createBook(bookPreviews) {
         </div>
     `;
 
-    return element;
-    
+  return element;
 }
 
-function genreOption(){
-const genreHtml = document.createDocumentFragment()
-const firstGenreElement = document.createElement('option')
-firstGenreElement.value = 'any'
-firstGenreElement.innerText = 'All Genres'
-genreHtml.appendChild(firstGenreElement)
+function genreOption() {
+  const genreHtml = document.createDocumentFragment();
+  const firstGenreElement = document.createElement("option");
+  firstGenreElement.value = "any";
+  firstGenreElement.innerText = "All Genres";
+  genreHtml.appendChild(firstGenreElement);
 
-for (const [id, name] of Object.entries(genres)) {
-    const element = document.createElement('option')
-    element.value = id
-    element.innerText = name
-    genreHtml.appendChild(element)
+  for (const [id, name] of Object.entries(genres)) {
+    const element = document.createElement("option");
+    element.value = id;
+    element.innerText = name;
+    genreHtml.appendChild(element);
+  }
+
+  document.querySelector("[data-search-genres]").appendChild(genreHtml);
 }
 
-document.querySelector('[data-search-genres]').appendChild(genreHtml)
-}
+function authorOption() {
+  console.log(authorOption);
+  const authorsHtml = document.createDocumentFragment();
+  const firstAuthorElement = document.createElement("option");
+  firstAuthorElement.value = "any";
+  firstAuthorElement.innerText = "All Authors";
+  authorsHtml.appendChild(firstAuthorElement);
 
-function authorOption(){
-    console.log(authorOption)
-const authorsHtml = document.createDocumentFragment()
-const firstAuthorElement = document.createElement('option')
-firstAuthorElement.value = 'any'
-firstAuthorElement.innerText = 'All Authors'
-authorsHtml.appendChild(firstAuthorElement)
-
-for (const [id, name] of Object.entries(authors)) {
-    const element = document.createElement('option')
-    element.value = id
-    element.innerText = name
-    authorsHtml.appendChild(element)
+  for (const [id, name] of Object.entries(authors)) {
+    const element = document.createElement("option");
+    element.value = id;
+    element.innerText = name;
+    authorsHtml.appendChild(element);
+  }
+  document.querySelector("[data-search-authors]").appendChild(authorsHtml);
 }
-document.querySelector('[data-search-authors]').appendChild(authorsHtml);
-}
-function themeColor(type = ''){
-    if(!type){return;}
-    if(type === 'night'){
-        document.documentElement.style.setProperty('--color-dark', '255, 255, 255');
-    document.documentElement.style.setProperty('--color-light', '10, 10, 20');
-    }
-    else {
-        document.documentElement.style.setProperty('--color-dark', '10, 10, 20');
-        document.documentElement.style.setProperty('--color-light', '255, 255, 255');
-    }
+function themeColor(type = "") {
+  if (!type) {
+    return;
+  }
+  if (type === "night") {
+    document.documentElement.style.setProperty("--color-dark", "255, 255, 255");
+    document.documentElement.style.setProperty("--color-light", "10, 10, 20");
+  } else {
+    document.documentElement.style.setProperty("--color-dark", "10, 10, 20");
+    document.documentElement.style.setProperty(
+      "--color-light",
+      "255, 255, 255"
+    );
+  }
 }
 // document.querySelector('[data-search-authors]').appendChild(authorsHtml)
-function initializeTheme(){
-if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-    document.querySelector('[data-settings-theme]').value = 'night'
-    themeColor("night")
-} else {
-    document.querySelector('[data-settings-theme]').value = 'day'
-    themeColor("day")
-}
-}
-document.querySelector('[data-list-button]').innerText = `Show more (${books.length - BOOKS_PER_PAGE})`
-document.querySelector('[data-list-button]').enabled = (matches.length - (page * BOOKS_PER_PAGE)) > 0
-
-
-remaining()
-const dataSearchOverLay = function (){
-   return document.querySelector('[data-search-overlay]')   
-}
-const overlayElement = dataSearchOverLay();
-function addEventListener(selector, eventType, eventHandler){
-    document.querySelector(selector).addEventListener(eventType, eventHandler)}
-document.querySelector('[data-search-cancel]').addEventListener('click', () => {
-    overlayElement.open = false
-})
-
-addEventListener('[data-settings-cancel]','click', () => {
-    document.querySelector('[data-settings-overlay]').open = false
-})
-
-addEventListener('[data-header-search]','click', () => {
-    overlayElement.open = true 
-    document.querySelector('[data-search-title]').focus()
-})
-
-addEventListener('[data-header-settings]','click', () => {
-    document.querySelector('[data-settings-overlay]').open = true 
-})
-
-addEventListener('[data-list-close]','click', () => {
-    document.querySelector('[data-list-active]').open = false
-})
-
-
-addEventListener('[data-settings-form]','submit', (event) => {
-    event.preventDefault()
-    const formData = new FormData(event.target)
-    const { theme } = Object.fromEntries(formData)
-
-    themeColor(theme)
-    
-    document.querySelector('[data-settings-overlay]').open = false
-})
-function remaining(){
-    document.querySelector('[data-list-button]').innerHTML = `
-    <span>Show more</span>
-    <span class="list__remaining"> (${(matches.length - (page * BOOKS_PER_PAGE)) > 0 ? (matches.length - (page * BOOKS_PER_PAGE)) : 0})</span>
-`
+function initializeTheme() {
+  if (
+    window.matchMedia &&
+    window.matchMedia("(prefers-color-scheme: dark)").matches
+  ) {
+    document.querySelector("[data-settings-theme]").value = "night";
+    themeColor("night");
+  } else {
+    document.querySelector("[data-settings-theme]").value = "day";
+    themeColor("day");
+  }
+remaining();
+const dataSearchOverLay = function () {
+  return document.querySelector("[data-search-overlay]");
 };
+const overlayElement = dataSearchOverLay();
 
+function addEventListener(selector, eventType, eventHandler) {
+  document.querySelector(selector).addEventListener(eventType, eventHandler);
+}
 
-addEventListener('[data-search-form]','submit', (event) => {
-    event.preventDefault()
-    const formData = new FormData(event.target)
-    const filters = Object.fromEntries(formData)
-    const result = []
+function initializeEventListener() {
+  document
+    .querySelector("[data-search-cancel]")
+    .addEventListener("click", () => {
+      overlayElement.open = false;
+    });
 
-    for (const book of books) {
-        let genreMatch = filters.genre === 'any'
+  addEventListener("[data-settings-cancel]", "click", () => {
+    document.querySelector("[data-settings-overlay]").open = false;
+  });
 
-        for (const singleGenre of book.genres) {
-            if (genreMatch) break;
-            if (singleGenre === filters.genre) { genreMatch = true }
-        }
+  addEventListener("[data-header-search]", "click", () => {
+    overlayElement.open = true;
+    document.querySelector("[data-search-title]").focus();
+  });
 
-        if (
-            (filters.title.trim() === '' || book.title.toLowerCase().includes(filters.title.toLowerCase())) && 
-            (filters.author === 'any' || book.author === filters.author) && 
-            genreMatch
-        ) {
-            result.push(book)
-        }
+  addEventListener("[data-header-settings]", "click", () => {
+    document.querySelector("[data-settings-overlay]").open = true;
+  });
+
+  addEventListener("[data-list-close]", "click", () => {
+    document.querySelector("[data-list-active]").open = false;
+  });
+
+  addEventListener("[data-settings-form]", "submit", (event) => {
+    event.preventDefault();
+    const formData = new FormData(event.target);
+    const { theme } = Object.fromEntries(formData);
+
+    themeColor(theme);
+
+    document.querySelector("[data-settings-overlay]").open = false;
+  });
+}
+
+function remaining() {
+  document.querySelector("[data-list-button]").innerHTML = `
+    <span>Show more</span>
+    <span class="list__remaining"> (${
+      matches.length - page * BOOKS_PER_PAGE > 0
+        ? matches.length - page * BOOKS_PER_PAGE
+        : 0
+    })</span>
+`;
+}
+
+addEventListener("[data-search-form]", "submit", (event) => {
+  event.preventDefault();
+  const formData = new FormData(event.target);
+  const filters = Object.fromEntries(formData);
+  const result = [];
+
+  for (const book of books) {
+    let genreMatch = filters.genre === "any";
+
+    for (const singleGenre of book.genres) {
+      if (genreMatch) break;
+      if (singleGenre === filters.genre) {
+        genreMatch = true;
+      }
     }
 
-    page = 1;
-    matches = result
-
-    if (result.length < 1) {
-        document.querySelector('[data-list-message]').classList.add('list__message_show')
-    } else {
-        document.querySelector('[data-list-message]').classList.remove('list__message_show')
+    if (
+      (filters.title.trim() === "" ||
+        book.title.toLowerCase().includes(filters.title.toLowerCase())) &&
+      (filters.author === "any" || book.author === filters.author) &&
+      genreMatch
+    ) {
+      result.push(book);
     }
+  }
 
-    document.querySelector('[data-list-items]').innerHTML = ''
-    const newItems = document.createDocumentFragment()
+  page = 1;
+  matches = result;
 
-    for (const { author, id, image, title } of result.slice(0, BOOKS_PER_PAGE)) {
-        const element = document.createElement('button')
-        element.classList = 'preview'
-        element.setAttribute('data-preview', id)
-    
-        element.innerHTML = `
+  if (result.length < 1) {
+    document
+      .querySelector("[data-list-message]")
+      .classList.add("list__message_show");
+  } else {
+    document
+      .querySelector("[data-list-message]")
+      .classList.remove("list__message_show");
+  }
+
+  document.querySelector("[data-list-items]").innerHTML = "";
+  const newItems = document.createDocumentFragment();
+
+  for (const { author, id, image, title } of result.slice(0, BOOKS_PER_PAGE)) {
+    const element = document.createElement("button");
+    element.classList = "preview";
+    element.setAttribute("data-preview", id);
+
+    element.innerHTML = `
             <img
                 class="preview__image"
                 src="${image}"
@@ -181,29 +199,33 @@ addEventListener('[data-search-form]','submit', (event) => {
                 <h3 class="preview__title">${title}</h3>
                 <div class="preview__author">${authors[author]}</div>
             </div>
-        `
+        `;
 
-        newItems.appendChild(element)
-    }
+    newItems.appendChild(element);
+  }
 
-    document.querySelector('[data-list-items]').appendChild(newItems)
-    document.querySelector('[data-list-button]').disabled = (matches.length - (page * BOOKS_PER_PAGE)) < 1
+  document.querySelector("[data-list-items]").appendChild(newItems);
+  document.querySelector("[data-list-button]").disabled =
+    matches.length - page * BOOKS_PER_PAGE < 1;
 
-    remaining()
+  remaining();
 
-    window.scrollTo({top: 0, behavior: 'smooth'});
-    overlayElement.open = false
-})
+  window.scrollTo({ top: 0, behavior: "smooth" });
+  overlayElement.open = false;
+});
 
-addEventListener('[data-list-button]','click', () => {
-    const fragment = document.createDocumentFragment()
+addEventListener("[data-list-button]", "click", () => {
+  const fragment = document.createDocumentFragment();
 
-    for (const { author, id, image, title } of matches.slice(page * BOOKS_PER_PAGE, (page + 1) * BOOKS_PER_PAGE)) {
-        const element = document.createElement('button')
-        element.classList = 'preview'
-        element.setAttribute('data-preview', id)
-    
-        element.innerHTML = `
+  for (const { author, id, image, title } of matches.slice(
+    page * BOOKS_PER_PAGE,
+    (page + 1) * BOOKS_PER_PAGE
+  )) {
+    const element = document.createElement("button");
+    element.classList = "preview";
+    element.setAttribute("data-preview", id);
+
+    element.innerHTML = `
             <img
                 class="preview__image"
                 src="${image}"
@@ -213,56 +235,59 @@ addEventListener('[data-list-button]','click', () => {
                 <h3 class="preview__title">${title}</h3>
                 <div class="preview__author">${authors[author]}</div>
             </div>
-        `
+        `;
 
-        fragment.appendChild(element)
+    fragment.appendChild(element);
+  }
+
+  document.querySelector("[data-list-items]").appendChild(fragment);
+  page += 1;
+  remaining();
+});
+
+addEventListener("[data-list-items]", "click", (event) => {
+  const pathArray = Array.from(event.path || event.composedPath());
+  let active = null;
+
+  for (const node of pathArray) {
+    if (active) break;
+
+    if (node?.dataset?.preview) {
+      let result = null;
+
+      for (const singleBook of books) {
+        if (result) break;
+        if (singleBook.id === node?.dataset?.preview) result = singleBook;
+      }
+
+      active = result;
     }
+  }
 
-    document.querySelector('[data-list-items]').appendChild(fragment)
-    page += 1
-    remaining()
-})
+  if (active) {
+    document.querySelector("[data-list-active]").open = true;
+    document.querySelector("[data-list-blur]").src = active.image;
+    document.querySelector("[data-list-image]").src = active.image;
+    document.querySelector("[data-list-title]").innerText = active.title;
+    document.querySelector("[data-list-subtitle]").innerText = `${
+      authors[active.author]
+    } (${new Date(active.published).getFullYear()})`;
+    document.querySelector("[data-list-description]").innerText =
+      active.description;
+  }
+});
 
-addEventListener('[data-list-items]','click', (event) => {
-    const pathArray = Array.from(event.path || event.composedPath())
-    let active = null
+function initializeApp() {
+  const starting = document.createDocumentFragment();
+  for (const book of matches.slice(0, BOOKS_PER_PAGE)) {
+    starting.appendChild(createBook(book));
+  }
 
-    for (const node of pathArray) {
-        if (active) break
-
-        if (node?.dataset?.preview) {
-            let result = null
-    
-            for (const singleBook of books) {
-                if (result) break;
-                if (singleBook.id === node?.dataset?.preview) result = singleBook
-            } 
-        
-            active = result
-        }
-    }
-    
-    if (active) {
-        document.querySelector('[data-list-active]').open = true
-        document.querySelector('[data-list-blur]').src = active.image
-        document.querySelector('[data-list-image]').src = active.image
-        document.querySelector('[data-list-title]').innerText = active.title
-        document.querySelector('[data-list-subtitle]').innerText = `${authors[active.author]} (${new Date(active.published).getFullYear()})`
-        document.querySelector('[data-list-description]').innerText = active.description
-    }
-})
-
-function initializeApp(){
-    const starting = document.createDocumentFragment()
-    for (const book of matches.slice(0, BOOKS_PER_PAGE)) {
-        starting.appendChild(createBook(book));
-    }
-
-    
-    document.querySelector('[data-list-items]').appendChild(starting);
-    genreOption()
-    authorOption()
-    initializeTheme()
+  document.querySelector("[data-list-items]").appendChild(starting);
+  genreOption();
+  authorOption();
+  initializeTheme();
+  initializeEventListener();
 }
 
 initializeApp()
