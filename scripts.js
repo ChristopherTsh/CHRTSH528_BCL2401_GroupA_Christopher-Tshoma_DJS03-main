@@ -125,7 +125,8 @@ function remaining(){
 `
 };
 
-document.querySelector('[data-search-form]').addEventListener('submit', (event) => {
+
+addEventListener('[data-search-form]','submit', (event) => {
     event.preventDefault()
     const formData = new FormData(event.target)
     const filters = Object.fromEntries(formData)
@@ -189,7 +190,7 @@ document.querySelector('[data-search-form]').addEventListener('submit', (event) 
     overlayElement.open = false
 })
 
-document.querySelector('[data-list-button]').addEventListener('click', () => {
+addEventListener('[data-list-button]','click', () => {
     const fragment = document.createDocumentFragment()
 
     for (const { author, id, image, title } of matches.slice(page * BOOKS_PER_PAGE, (page + 1) * BOOKS_PER_PAGE)) {
@@ -217,7 +218,7 @@ document.querySelector('[data-list-button]').addEventListener('click', () => {
     remaining()
 })
 
-document.querySelector('[data-list-items]').addEventListener('click', (event) => {
+addEventListener('[data-list-items]','click', (event) => {
     const pathArray = Array.from(event.path || event.composedPath())
     let active = null
 
