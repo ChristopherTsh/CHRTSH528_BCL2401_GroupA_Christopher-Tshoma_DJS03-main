@@ -3,7 +3,9 @@ import { books, authors, genres, BOOKS_PER_PAGE } from './data.js'
 let page = 1;
 let matches = books
 
-function createBook({ author, id, image, title }) {
+function createBook(bookPreviews) {
+    const { id, image, title, author } = bookPreviews;
+
     const element = document.createElement('button')
     element.classList = 'preview'
     element.setAttribute('data-preview', id)
@@ -246,7 +248,15 @@ addEventListener('[data-list-items]','click', (event) => {
 })
 
 function initializeApp(){
-    createBook();
+    const bookPreviews = {
+        author: 'Author Name',
+        id: 'book-1',
+        image: 'path/to/image.jpg',
+        title: 'Book Title'
+    };
+
+    const bookElement = createBook(bookPreviews);
+    document.querySelector('[data-list-items]').appendChild(bookElement);
 }
 
 initializeApp()
