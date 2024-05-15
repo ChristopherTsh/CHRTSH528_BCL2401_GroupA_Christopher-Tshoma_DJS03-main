@@ -27,7 +27,7 @@ function createBook(bookPreviews) {
     
 }
 
-
+function genreOption(){
 const genreHtml = document.createDocumentFragment()
 const firstGenreElement = document.createElement('option')
 firstGenreElement.value = 'any'
@@ -42,7 +42,10 @@ for (const [id, name] of Object.entries(genres)) {
 }
 
 document.querySelector('[data-search-genres]').appendChild(genreHtml)
+}
 
+function authorOption(){
+    console.log(authorOption)
 const authorsHtml = document.createDocumentFragment()
 const firstAuthorElement = document.createElement('option')
 firstAuthorElement.value = 'any'
@@ -55,6 +58,8 @@ for (const [id, name] of Object.entries(authors)) {
     element.innerText = name
     authorsHtml.appendChild(element)
 }
+document.querySelector('[data-search-authors]').appendChild(authorsHtml);
+}
 function themeColor(type = ''){
     if(!type){return;}
     if(type === 'night'){
@@ -66,7 +71,7 @@ function themeColor(type = ''){
         document.documentElement.style.setProperty('--color-light', '255, 255, 255');
     }
 }
-document.querySelector('[data-search-authors]').appendChild(authorsHtml)
+// document.querySelector('[data-search-authors]').appendChild(authorsHtml)
 
 if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
     document.querySelector('[data-settings-theme]').value = 'night'
@@ -255,6 +260,8 @@ function initializeApp(){
 
     
     document.querySelector('[data-list-items]').appendChild(starting);
+    genreOption()
+    authorOption()
 }
 
 initializeApp()
