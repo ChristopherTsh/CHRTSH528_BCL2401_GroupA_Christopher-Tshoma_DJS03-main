@@ -86,6 +86,9 @@ function initializeTheme() {
     document.querySelector("[data-settings-theme]").value = "day";
     themeColor("day");
   }
+}
+
+
 remaining();
 const dataSearchOverLay = function () {
   return document.querySelector("[data-search-overlay]");
@@ -290,4 +293,4 @@ function initializeApp() {
   initializeEventListener();
 }
 
-initializeApp()
+initializeApp();
