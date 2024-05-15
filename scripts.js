@@ -5,6 +5,7 @@ let matches = books
 
 const starting = document.createDocumentFragment()
 
+
 for (const { author, id, image, title } of matches.slice(0, BOOKS_PER_PAGE)) {
     const element = document.createElement('button')
     element.classList = 'preview'
@@ -54,9 +55,8 @@ for (const [id, name] of Object.entries(authors)) {
     element.innerText = name
     authorsHtml.appendChild(element)
 }
-function themeColor(type){
+function themeColor(type = ''){
     if(!type){return;}
-    
     if(type === 'night'){
         document.documentElement.style.setProperty('--color-dark', '255, 255, 255');
     document.documentElement.style.setProperty('--color-light', '10, 10, 20');
