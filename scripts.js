@@ -351,4 +351,7 @@ function addThemeToggle() {
     });
 }
 
-initializeApp();
+
+document.addEventListener('DOMContentLoaded', function(){
+  initializeApp();
+});
