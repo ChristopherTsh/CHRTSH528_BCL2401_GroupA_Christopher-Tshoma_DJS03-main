@@ -10,11 +10,11 @@ let matches = books;
 function createBook(bookPreviews) {
   // Extracting  information from book data
   const { id, image, title, author } = bookPreviews;
-  // Creating a button element
+ // Creating a button element 
   const element = document.createElement("button");
   element.classList = "preview";
   element.setAttribute("data-preview", id);
-  // Inner HTML with book information
+ // Inner HTML with book information
   element.innerHTML = `
         <img
             class="preview__image"
@@ -29,7 +29,7 @@ function createBook(bookPreviews) {
 
   return element;
 }
-// Function to populate genre options in search
+// Function to populate genre options in search 
 function genreOption() {
   // Creating options for all genres
   const genreHtml = document.createDocumentFragment();
@@ -47,7 +47,7 @@ function genreOption() {
   // Appending options to the search
   document.querySelector("[data-search-genres]").appendChild(genreHtml);
 }
-// Function to populate author options in search
+// Function to populate author options in search 
 function authorOption() {
   // Creating options for all authors
   console.log(authorOption);
@@ -56,14 +56,14 @@ function authorOption() {
   firstAuthorElement.value = "any";
   firstAuthorElement.innerText = "All Authors";
   authorsHtml.appendChild(firstAuthorElement);
-  // Populating author options from data
+ // Populating author options from data
   for (const [id, name] of Object.entries(authors)) {
     const element = document.createElement("option");
     element.value = id;
     element.innerText = name;
     authorsHtml.appendChild(element);
   }
-  // Appending options to the search
+  // Appending options to the search 
   document.querySelector("[data-search-authors]").appendChild(authorsHtml);
 }
 // Function to initialize theme based on user's system preferences
@@ -73,7 +73,7 @@ function initializeTheme() {
     window.matchMedia &&
     window.matchMedia("(prefers-color-scheme: dark)").matches
   ) {
-    // Setting theme to night mode
+     // Setting theme to night mode
     document.querySelector("[data-settings-theme]").value = "night";
     themeColor("night");
   } else {
@@ -95,7 +95,7 @@ function addEventListener(selector, eventType, eventHandler) {
 }
 // Function to add event listeners for various user interactions
 function initializeEventListener() {
-  // Event listener for canceling search overlay
+   // Event listener for canceling search overlay
   document
     .querySelector("[data-search-cancel]")
     .addEventListener("click", () => {
@@ -129,7 +129,7 @@ function initializeEventListener() {
     document.querySelector("[data-settings-overlay]").open = false;
   });
 }
-// Function to add event listener for submitting search
+// Function to add event listener for submitting search 
 function addSearchFormSubmitListener() {
   addEventListener("[data-search-form]", "submit", (event) => {
     event.preventDefault();
@@ -351,6 +351,7 @@ function addThemeToggle() {
     });
 }
 
-document.addEventListener("DOMContentLoaded", function () {
+
+document.addEventListener('DOMContentLoaded', function(){
   initializeApp();
 });
