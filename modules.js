@@ -57,3 +57,32 @@ const styles = `
     display: block;
   }
 `;
+
+const bookPreviewTemplate = `
+  <div class="book-preview">
+    <img class="book-preview__image" src="{image}" alt="{title}">
+    <div class="book-preview__info">
+      <h3 class="book-preview__title">{title}</h3>
+      <div class="book-preview__author">{author}</div>
+    </div>
+  </div>
+`;
+
+const bookPreviewTemplate = `
+  <div class="book-preview">
+    <img class="book-preview__image" src="{image}" alt="{title}">
+    <div class="book-preview__info">
+      <h3 class="book-preview__title">{title}</h3>
+      <div class="book-preview__author">{author}</div>
+    </div>
+  </div>
+`;
+
+const genreOptionTemplate = `
+  <option value="{id}">{name}</option>
+`;
+
+const authorOptionTemplate = `
+  <option value="{id}">{name}</option>
+`;
+
