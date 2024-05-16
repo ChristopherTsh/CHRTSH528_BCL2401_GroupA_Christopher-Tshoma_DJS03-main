@@ -75,6 +75,7 @@ function initializeTheme() {
 }
 
 remaining(books, page, BOOKS_PER_PAGE);
+
 const dataSearchOverLay = function () {
   return document.querySelector("[data-search-overlay]");
 };
@@ -118,54 +119,58 @@ function initializeEventListener() {
     document.querySelector("[data-settings-overlay]").open = false;
   });
 }
-addEventListener("[data-search-form]", "submit", (event) => {
-  event.preventDefault();
-  const formData = new FormData(event.target);
-  const filters = Object.fromEntries(formData);
-  const result = [];
+function addSearchFormSubmitListener() {
+  addEventListener("[data-search-form]", "submit", (event) => {
+    event.preventDefault();
+    const formData = new FormData(event.target);
+    const filters = Object.fromEntries(formData);
+    const result = [];
 
-  for (const book of books) {
-    let genreMatch = filters.genre === "any";
+    for (const book of books) {
+      let genreMatch = filters.genre === "any";
 
-    for (const singleGenre of book.genres) {
-      if (genreMatch) break;
-      if (singleGenre === filters.genre) {
-        genreMatch = true;
+      for (const singleGenre of book.genres) {
+        if (genreMatch) break;
+        if (singleGenre === filters.genre) {
+          genreMatch = true;
+        }
+      }
+
+      if (
+        (filters.title.trim() === "" ||
+          book.title.toLowerCase().includes(filters.title.toLowerCase())) &&
+        (filters.author === "any" || book.author === filters.author) &&
+        genreMatch
+      ) {
+        result.push(book);
       }
     }
 
-    if (
-      (filters.title.trim() === "" ||
-        book.title.toLowerCase().includes(filters.title.toLowerCase())) &&
-      (filters.author === "any" || book.author === filters.author) &&
-      genreMatch
-    ) {
-      result.push(book);
+    page = 1;
+    matches = result;
+
+    if (result.length < 1) {
+      document
+        .querySelector("[data-list-message]")
+        .classList.add("list__message_show");
+    } else {
+      document
+        .querySelector("[data-list-message]")
+        .classList.remove("list__message_show");
     }
-  }
 
-  page = 1;
-  matches = result;
+    document.querySelector("[data-list-items]").innerHTML = "";
+    const newItems = document.createDocumentFragment();
 
-  if (result.length < 1) {
-    document
-      .querySelector("[data-list-message]")
-      .classList.add("list__message_show");
-  } else {
-    document
-      .querySelector("[data-list-message]")
-      .classList.remove("list__message_show");
-  }
+    for (const { author, id, image, title } of result.slice(
+      0,
+      BOOKS_PER_PAGE
+    )) {
+      const element = document.createElement("button");
+      element.classList = "preview";
+      element.setAttribute("data-preview", id);
 
-  document.querySelector("[data-list-items]").innerHTML = "";
-  const newItems = document.createDocumentFragment();
-
-  for (const { author, id, image, title } of result.slice(0, BOOKS_PER_PAGE)) {
-    const element = document.createElement("button");
-    element.classList = "preview";
-    element.setAttribute("data-preview", id);
-
-    element.innerHTML = `
+      element.innerHTML = `
             <img
                 class="preview__image"
                 src="${image}"
@@ -177,31 +182,33 @@ addEventListener("[data-search-form]", "submit", (event) => {
             </div>
         `;
 
-    newItems.appendChild(element);
-  }
+      newItems.appendChild(element);
+    }
 
-  document.querySelector("[data-list-items]").appendChild(newItems);
-  document.querySelector("[data-list-button]").disabled =
-    matches.length - page * BOOKS_PER_PAGE < 1;
+    document.querySelector("[data-list-items]").appendChild(newItems);
+    document.querySelector("[data-list-button]").disabled =
+      matches.length - page * BOOKS_PER_PAGE < 1;
 
-  remaining(books, page, BOOKS_PER_PAGE);
+    remaining(books, page, BOOKS_PER_PAGE);
 
-  window.scrollTo({ top: 0, behavior: "smooth" });
-  overlayElement.open = false;
-});
+    window.scrollTo({ top: 0, behavior: "smooth" });
+    overlayElement.open = false;
+  });
+}
 
-addEventListener("[data-list-button]", "click", () => {
-  const fragment = document.createDocumentFragment();
+function listButtonClickListener() {
+  addEventListener("[data-list-button]", "click", () => {
+    const fragment = document.createDocumentFragment();
 
-  for (const { author, id, image, title } of matches.slice(
-    page * BOOKS_PER_PAGE,
-    (page + 1) * BOOKS_PER_PAGE
-  )) {
-    const element = document.createElement("button");
-    element.classList = "preview";
-    element.setAttribute("data-preview", id);
+    for (const { author, id, image, title } of matches.slice(
+      page * BOOKS_PER_PAGE,
+      (page + 1) * BOOKS_PER_PAGE
+    )) {
+      const element = document.createElement("button");
+      element.classList = "preview";
+      element.setAttribute("data-preview", id);
 
-    element.innerHTML = `
+      element.innerHTML = `
             <img
                 class="preview__image"
                 src="${image}"
@@ -213,45 +220,47 @@ addEventListener("[data-list-button]", "click", () => {
             </div>
         `;
 
-    fragment.appendChild(element);
-  }
-
-  document.querySelector("[data-list-items]").appendChild(fragment);
-  page += 1;
-  remaining(books, page, BOOKS_PER_PAGE);
-});
-
-addEventListener("[data-list-items]", "click", (event) => {
-  const pathArray = Array.from(event.path || event.composedPath());
-  let active = null;
-
-  for (const node of pathArray) {
-    if (active) break;
-
-    if (node?.dataset?.preview) {
-      let result = null;
-
-      for (const singleBook of books) {
-        if (result) break;
-        if (singleBook.id === node?.dataset?.preview) result = singleBook;
-      }
-
-      active = result;
+      fragment.appendChild(element);
     }
-  }
 
-  if (active) {
-    document.querySelector("[data-list-active]").open = true;
-    document.querySelector("[data-list-blur]").src = active.image;
-    document.querySelector("[data-list-image]").src = active.image;
-    document.querySelector("[data-list-title]").innerText = active.title;
-    document.querySelector("[data-list-subtitle]").innerText = `${
-      authors[active.author]
-    } (${new Date(active.published).getFullYear()})`;
-    document.querySelector("[data-list-description]").innerText =
-      active.description;
-  }
-});
+    document.querySelector("[data-list-items]").appendChild(fragment);
+    page += 1;
+    remaining(books, page, BOOKS_PER_PAGE);
+  });
+}
+function addListItemsClickListener() {
+  addEventListener("[data-list-items]", "click", (event) => {
+    const pathArray = Array.from(event.path || event.composedPath());
+    let active = null;
+
+    for (const node of pathArray) {
+      if (active) break;
+
+      if (node?.dataset?.preview) {
+        let result = null;
+
+        for (const singleBook of books) {
+          if (result) break;
+          if (singleBook.id === node?.dataset?.preview) result = singleBook;
+        }
+
+        active = result;
+      }
+    }
+
+    if (active) {
+      document.querySelector("[data-list-active]").open = true;
+      document.querySelector("[data-list-blur]").src = active.image;
+      document.querySelector("[data-list-image]").src = active.image;
+      document.querySelector("[data-list-title]").innerText = active.title;
+      document.querySelector("[data-list-subtitle]").innerText = `${
+        authors[active.author]
+      } (${new Date(active.published).getFullYear()})`;
+      document.querySelector("[data-list-description]").innerText =
+        active.description;
+    }
+  });
+}
 function themeSwitch() {
   const toggle = localStorage.getItem("toggle") === "enabled";
   document.body.classList.toggle("toggle", toggle);
@@ -267,17 +276,18 @@ function saveToggleState(toggleState) {
   localStorage.setItem("toggle", toggleState);
 }
 
-addEventListener("[data-settings-form]", "submit", (event) => {
-  event.preventDefault();
-  const formData = new FormData(event.target);
-  const { theme } = Object.fromEntries(formData);
+function settingsFormSubmit() {
+  addEventListener("[data-settings-form]", "submit", (event) => {
+    event.preventDefault();
+    const formData = new FormData(event.target);
+    const { theme } = Object.fromEntries(formData);
 
-  themeColor(theme);
-  saveThemePreference(theme); // Save theme preference to local storage
+    themeColor(theme);
+    saveThemePreference(theme); // Save theme preference to local storage
 
-  document.querySelector("[data-settings-overlay]").open = false;
-});
-
+    document.querySelector("[data-settings-overlay]").open = false;
+  });
+}
 function initializeApp() {
   const starting = document.createDocumentFragment();
   for (const book of matches.slice(0, BOOKS_PER_PAGE)) {
@@ -291,27 +301,39 @@ function initializeApp() {
   initializeTheme();
   initializeEventListener();
   themeSwitch();
+  addListItemsClickListener();
+  settingsFormSubmit();
+  addSearchFormSubmitListener();
+  listButtonClickListener();
+  addThemeChange();
+  ThemeFromStorage();
+  addThemeToggle();
 }
 
 initializeApp();
-
-const savedTheme = localStorage.getItem("theme");
-if (savedTheme) {
-  themeColor(savedTheme);
+function ThemeFromStorage() {
+  const savedTheme = localStorage.getItem("theme");
+  if (savedTheme) {
+    themeColor(savedTheme);
+  }
 }
 
-document
-  .querySelector("[data-settings-theme]")
-  .addEventListener("change", (event) => {
-    console.log(theme);
-    const theme = event.target.value;
-    themeColor(theme);
-    saveThemePreference(theme);
-  });
-// Add event listener for theme toggle button and save its state to local storage
-document
-  .querySelector("[data-settings-toggle]")
-  .addEventListener("click", () => {
-    const toggleState = document.body.classList.toggle("toggle");
-    saveToggleState(toggleState ? "enabled" : "disabled");
-  });
+function addThemeChange() {
+  document
+    .querySelector("[data-settings-theme]")
+    .addEventListener("change", (event) => {
+      console.log(theme);
+      const theme = event.target.value;
+      themeColor(theme);
+      saveThemePreference(theme);
+    });
+}
+function addThemeToggle() {
+  // Add event listener for theme toggle button and save its state to local storage
+  document
+    .querySelector("[data-settings-toggle]")
+    .addEventListener("click", () => {
+      const toggleState = document.body.classList.toggle("toggle");
+      saveToggleState(toggleState ? "enabled" : "disabled");
+    });
+}
