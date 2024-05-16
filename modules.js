@@ -86,3 +86,10 @@ const authorOptionTemplate = `
   <option value="{id}">{name}</option>
 `;
 
+function StylesFo(styles) {
+  const styleSheet = document.createElement("style");
+  styleSheet.type = "text/css";
+  styleSheet.innerText = styles;
+  document.head.appendChild(styleSheet);
+}
+
