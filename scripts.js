@@ -310,7 +310,6 @@ function initializeApp() {
   addThemeToggle();
 }
 
-initializeApp();
 function ThemeFromStorage() {
   const savedTheme = localStorage.getItem("theme");
   if (savedTheme) {
@@ -337,3 +336,5 @@ function addThemeToggle() {
       saveToggleState(toggleState ? "enabled" : "disabled");
     });
 }
+
+initializeApp();
