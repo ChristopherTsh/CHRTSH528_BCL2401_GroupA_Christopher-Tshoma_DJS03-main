@@ -4,7 +4,8 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
+    <script type="module" src="./previewtask.js"></script> <!-- Correct the path -->
+  
     <title>Book Connect</title>
 
     <link rel="apple-touch-icon" sizes="180x180" href="/meta/apple-touch-icon.png">
@@ -96,12 +97,7 @@
       <button class="list__button" data-list-button></button>
     </main>
 
-    <htmlComponent
-        data-matches='[{"author": "1", "id": "1", "image": "image1.jpg", "title": "Book 1"}, {"author": "2", "id": "2", "image": "image2.jpg", "title": "Book 2"}]'
-        data-authors='["Author 1", "Author 2"]'
-        data-books-per-page="36"
-    ></htmlComponent>
-
+    <preview-task></preview-task>
 
     <dialog class="overlay" data-list-active>
       <div class="overlay__preview"><img class="overlay__blur" data-list-blur src=""/><img class="overlay__image" data-list-image src=""/></div>
