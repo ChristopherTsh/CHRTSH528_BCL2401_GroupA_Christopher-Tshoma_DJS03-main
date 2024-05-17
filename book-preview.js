@@ -22,7 +22,7 @@ class BookPreviewList extends HTMLElement {
   </dialog>
       
   `;
-
+  }
   connectedCallback() {
     this.shadowRoot
       .querySelector('[data-list-close]')
@@ -47,45 +47,3 @@ class BookPreviewList extends HTMLElement {
 }
 
 customElements.define('book-preview', BookPreview);
-    booksForPage.forEach(({ author, id, image, title }) => {
-      const previewElement = document.createElement("button");
-      previewElement.classList.add("preview");
-      previewElement.setAttribute("data-preview", id);
-      previewElement.innerHTML = previewTemplate.replace("${id}", id)
-                                                .replace("${image}", image)
-                                                .replace("${title}", title)
-                                                .replace("${authors[author]}", authors[author]);
-      newItems.appendChild(previewElement);
-    });
-
-    targetElement.appendChild(newItems);
-  }
-}
-
-// Define the custom element
-customElements.define("book-preview-list", BookPreviewList);
-
-class BookPreview extends HTMLElement {
-  static get observedAttributes() {
-    return ["data-book"]; // Observe the "data-book" attribute
-  }
-
-  constructor() {
-    super();
-    const shadow = this.attachShadow({ mode: "open" });
-    // ... rest of the code from the previous BookPreview
-  }
-
-  attributeChangedCallback(name, oldValue, newValue) {
-    if (name === "data-book") {
-      const bookData = JSON.parse(newValue); // Parse the JSON data
-      this.renderPreview(bookData); // Call a new method to render the preview
-    }
-  }
-
-  renderPreview(bookData) {
-    const { author, id, image, title } = bookData;
-    // Use the book data to populate the template in the shadow DOM
-    // ... similar logic to the original createBook function
-  }
-}
