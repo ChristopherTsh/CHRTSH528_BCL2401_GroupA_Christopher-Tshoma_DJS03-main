@@ -1,33 +1,22 @@
 // Importing  data and utilities from other modules
 import { books, authors, genres, BOOKS_PER_PAGE } from "./data.js";
 import { themeColor, remaining } from "./bookUtils.js";
+// import'./previewtask/BookPreviewList.js'
 
 // Initializing variables
 let page = 1;
 let matches = books;
 
 // Function to create HTML elements
-function createBook(bookPreviews) {
-  // Extracting  information from book data
-  const { id, image, title, author } = bookPreviews;
- // Creating a button element 
-  const element = document.createElement("button");
-  element.classList = "preview";
-  element.setAttribute("data-preview", id);
- // Inner HTML with book information
-  element.innerHTML = `
-        <img
-            class="preview__image"
-            src="${image}"
-        />
-        
-        <div class="preview__info">
-            <h3 class="preview__title">${title}</h3>
-            <div class="preview__author">${author}</div>
-        </div>
-    `;
+function initializeApp() {
+  const starting = document.createDocumentFragment();
+  for (const book of matches.slice(0, BOOKS_PER_PAGE)) {
+    const bookPreview = new BookPreview(book);
+    starting.appendChild(bookPreview); // Use the BookPreview element directly
+  }
 
-  return element;
+  document.querySelector("[data-list-items]").appendChild(starting);
+  // ... rest of the code
 }
 // Function to populate genre options in search 
 function genreOption() {
