@@ -1,34 +1,35 @@
 // Importing  data and utilities from other modules
 import { books, authors, genres, BOOKS_PER_PAGE } from "./data.js";
 import { themeColor, remaining } from "./bookUtils.js";
+import './modules/preview-task.js';
 
 // Initializing variables
 let page = 1;
 let matches = books;
 
 // Function to create HTML elements
-function createBook(bookPreviews) {
-  // Extracting  information from book data
-  const { id, image, title, author } = bookPreviews;
- // Creating a button element 
-  const element = document.createElement("button");
-  element.classList = "preview";
-  element.setAttribute("data-preview", id);
- // Inner HTML with book information
-  element.innerHTML = `
-        <img
-            class="preview__image"
-            src="${image}"
-        />
+// function createBook(bookPreviews) {
+//   // Extracting  information from book data
+//   const { id, image, title, author } = bookPreviews;
+//  // Creating a button element 
+//   const element = document.createElement("button");
+//   element.classList = "preview";
+//   element.setAttribute("data-preview", id);
+//  // Inner HTML with book information
+//   element.innerHTML = `
+//         <img
+//             class="preview__image"
+//             src="${image}"
+//         />
         
-        <div class="preview__info">
-            <h3 class="preview__title">${title}</h3>
-            <div class="preview__author">${author}</div>
-        </div>
-    `;
+//         <div class="preview__info">
+//             <h3 class="preview__title">${title}</h3>
+//             <div class="preview__author">${author}</div>
+//         </div>
+//     `;
 
-  return element;
-}
+//   return element;
+// }
 // Function to populate genre options in search 
 function genreOption() {
   // Creating options for all genres
@@ -67,21 +68,21 @@ function authorOption() {
   document.querySelector("[data-search-authors]").appendChild(authorsHtml);
 }
 // Function to initialize theme based on user's system preferences
-function initializeTheme() {
-  // Checking if user prefers dark mode
-  if (
-    window.matchMedia &&
-    window.matchMedia("(prefers-color-scheme: dark)").matches
-  ) {
-     // Setting theme to night mode
-    document.querySelector("[data-settings-theme]").value = "night";
-    themeColor("night");
-  } else {
-    // Setting theme to day mode
-    document.querySelector("[data-settings-theme]").value = "day";
-    themeColor("day");
-  }
-}
+// function initializeTheme() {
+//   // Checking if user prefers dark mode
+//   if (
+//     window.matchMedia &&
+//     window.matchMedia("(prefers-color-scheme: dark)").matches
+//   ) {
+//      // Setting theme to night mode
+//     document.querySelector("[data-settings-theme]").value = "night";
+//     themeColor("night");
+//   } else {
+//     // Setting theme to day mode
+//     document.querySelector("[data-settings-theme]").value = "day";
+//     themeColor("day");
+//   }
+// }
 
 remaining(books, page, BOOKS_PER_PAGE);
 
