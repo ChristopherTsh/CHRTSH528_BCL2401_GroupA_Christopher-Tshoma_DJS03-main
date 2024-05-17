@@ -149,7 +149,7 @@
 //   });
 // }
 
-const htmlComponent = document.createElement('htmlComponent')
+const htmlComponent = document.createElement('template')
 
 htmlComponent.innerHTML =`
 <style>
@@ -223,12 +223,21 @@ const styles = `
                 <div class="preview__author">${authors[author]}</div>
             </div>
         `
+customElements.define(
+  "preview-task",
 
-  class PreviewTask extends HTMLElement{
+  class extends HTMLElement{
     inner = this.attachShadow({mode: "closed"});
-    connectedCallback(){
-      this.inner.appendChild()
+
+    constructor(){
+      super();
+      const { content} = htmlComponent
+      this.inner.appendChild(content.cloneNode(true));
+      
+      this.imageElement = shadow.querySelector('.book-preview__image');
+      this.titleElement = shadow.querySelector('.book-preview__title');
+      this.authorElement = shadow.querySelector('.book-preview__author');
     }
-  }   
+  })   
 
   customElements.define('preview-task', PreviewTask)
