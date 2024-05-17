@@ -1,96 +1,94 @@
-import { books, authors, genres, BOOKS_PER_PAGE } from "./data.js";
-
-
-function listButtonClickListener() {
-  addEventListener("[data-list-button]", "click", () => {
-    const fragment = document.createDocumentFragment();
-
-    for (const { author, id, image, title } of matches.slice(
-      page * BOOKS_PER_PAGE,
-      (page + 1) * BOOKS_PER_PAGE
-    )) {
-      const element = document.createElement("button");
-      element.classList = "preview";
-      element.setAttribute("data-preview", id);
-
-      
-
-      
-    }
-
+class BookPreviewList extends HTMLElement {
     
-
-const htmlComponent = document.createElement('template')
-htmlComponent.innerHTML =`
-<style>
-  .book-preview {
-    display: flex;
-    align-items: center;
-    padding: 10px;
-    border: 1px solid #ddd;
-    margin-bottom: 10px;
-  }
-  .book-preview__image {
-    width: 50px;
-    height: 50px;
-    margin-right: 10px;
-  }
-  .book-preview__info {
-    display: flex;
-    flex-direction: column;
-  }
-  .book-preview__title {
-    font-size: 16px;
-    font-weight: bold;
-  }
-  .book-preview__author {
-    font-size: 14px;
-    color: #555;
-  }
-</style>
-            <img
-                class="preview__image"
-                src="${image}"
-            />
-            
-            <div class="preview__info">
-                <h3 class="preview__title">${title}</h3>
-                <div class="preview__author">${authors[author]}</div>
-            </div>
-
-            
-        `;
-        fragment.appendChild(element);
-
-        document.querySelector("[data-list-items]").appendChild(fragment);
-    page += 1;
-    remaining(books, page, BOOKS_PER_PAGE);
-)
-}
- class PreviewTask extends HTMLElement{
-    
-
-    constructor(){
+  constructor() {
       super();
-      this.attachShadow({mode: "open"});
-      this.shadowRoot.appendChild(content.cloneNode(true));
+      // Create shadow DOM and attach the CSS
+      this.attachShadow({ mode: 'open' });
+      const style = document.createElement('style');
+      style.textContent = `
+          .preview {
+              border-width: 0;
+              width: 100%;
+              font-family: Roboto, sans-serif;
+              padding: 0.5rem 1rem;
+              display: flex;
+              align-items: center;
+              cursor: pointer;
+              text-align: left;
+              border-radius: 8px;
+              border: 1px solid rgba(var(--color-dark), 0.15);
+              background: rgba(var(--color-light), 1);
+          }
 
-      this.imageElement = shadow.querySelector('.book-preview__image');
-      this.titleElement = shadow.querySelector('.book-preview__title');
-      this.authorElement = shadow.querySelector('.book-preview__author');
-    }
-   
+          .preview__image {
+              width: 48px;
+              height: 70px;
+              object-fit: cover;
+              background: grey;
+              border-radius: 2px;
+              box-shadow: 0px 2px 1px -1px rgba(0, 0, 0, 0.2),
+                  0px 1px 1px 0px rgba(0, 0, 0, 0.1), 0px 1px 3px 0px rgba(0, 0, 0, 0.1);
+          }
 
-    // Method to set book data
-    setBookData({ image, title, author }) {
-      this.imageElement.src = image;
-      this.titleElement.textContent = title;
-      this.authorElement.textContent = author;
-    }
+          .preview__info {
+              padding: 1rem;
+          }
+
+          .preview__title {
+              margin: 0 0 0.5rem;
+              font-weight: bold;
+              display: -webkit-box;
+              -webkit-line-clamp: 2;
+              -webkit-box-orient: vertical;  
+              overflow: hidden;
+              color: rgba(var(--color-dark), 0.8);
+          }
+
+          .preview__author {
+              color: rgba(var(--color-dark), 0.4);
+          }
+      `;
+      this.shadowRoot.appendChild(style);
   }
 
+  connectedCallback() {
+      //Extract data from matches array
+      const matches = JSON.parse(this.getAttribute('data-matches'));
+      const authors = JSON.parse(this.getAttribute('data-authors'));
+      const BOOKS_PER_PAGE = parseInt(this.getAttribute('data-books-per-page')) || 10;
 
-customElements.define('preview-task', PreviewTask);
+      // Select the target element and clear its content
+      const targetElement = document.querySelector('[data-list-items]');
+      targetElement.innerHTML = '';
 
-export {PreviewTask};
+      // Create a document fragment for efficient DOM manipulation
+      const newItems = document.createDocumentFragment();
 
+      // Slice the matches array to get books for the current page
+      const booksForPage = matches.slice(0, BOOKS_PER_PAGE);
+
+      // Iterate over each book and create a book preview element
+      booksForPage.forEach(({ author, id, image, title }) => {
+          const previewElement = document.createElement('button');
+          previewElement.classList.add('preview');
+          previewElement.setAttribute('data-preview', id);
+
+          // Generate book preview HTML content
+          previewElement.innerHTML = `
+              <img class="preview__image" src="${image}" />
+              <div class="preview__info">
+                  <h3 class="preview__title">${title}</h3>
+                  <div class="preview__author">${authors[author]}</div>
+              </div>
+          `;
+
+          newItems.appendChild(previewElement);
+      });
+
+      // Append the new items to the target element
+      targetElement.appendChild(newItems);
+  }
+}
+
+// Define the custom element
+customElements.define('book-preview-list', BookPreviewList);

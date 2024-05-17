@@ -1,22 +1,31 @@
 // Importing  data and utilities from other modules
 import { books, authors, genres, BOOKS_PER_PAGE } from "./data.js";
 import { themeColor, remaining } from "./bookUtils.js";
-import { PreviewTask } from './previewtask.js';
 
 // Initializing variables
 let page = 1;
 let matches = books;
 
 // Function to create HTML elements
-function createBook(book) {
-  const element = document.createElement(" preview-task");
+function createBook(bookPreviews) {
+  // Extracting  information from book data
+  const { id, image, title, author } = bookPreviews;
+ // Creating a button element 
+  const element = document.createElement("button");
   element.classList = "preview";
-
-  element.setBookData({
-    image: book.image,
-    title: book.title,
-    author: authors[book.author]
-  });
+  element.setAttribute("data-preview", id);
+ // Inner HTML with book information
+  element.innerHTML = `
+        <img
+            class="preview__image"
+            src="${image}"
+        />
+        
+        <div class="preview__info">
+            <h3 class="preview__title">${title}</h3>
+            <div class="preview__author">${author}</div>
+        </div>
+    `;
 
   return element;
 }
